@@ -1,6 +1,7 @@
 from zillow.models import Property, PropertyType
 from rest_framework import serializers
 
+
 class PropertySerializer(serializers.ModelSerializer):
     class Meta:
         model = Property
@@ -12,3 +13,4 @@ class PropertyTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = PropertyType
         fields = '__all__'
+
