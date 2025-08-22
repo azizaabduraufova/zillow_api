@@ -27,6 +27,12 @@ class UserProfileSerializer(serializers.Serializer):
     phone = serializers.CharField(max_length=15, required=True)
     img = serializers.ImageField(allow_empty_file=True, allow_null=True, required=False)
 
+    profile_type = serializers.SlugRelatedField(
+        queryset=ProfileType.objects.all(),
+        slug_field='type',
+        many=True
+    )
+
     def validate(self, attrs):
         password = attrs.get('password')
         if password:
@@ -43,11 +49,13 @@ class UserProfileSerializer(serializers.Serializer):
         password = validated_data.pop('password')
         validated_data.pop('password_confirm')
         phone = validated_data.pop('phone')
+        profile_type = validated_data.pop('profile_type')
         with transaction.atomic():
             user = User.objects.create(**validated_data)
             user.set_password(password)
             user.save()
             Profile.objects.create(user=user, phone=phone, img=img)
+            profile.profile_type.set(profile_type)
         return user
 
     def update(self, instance, validated_data):
@@ -64,6 +72,8 @@ class UserProfileSerializer(serializers.Serializer):
 
         profile.phone = validated_data.get('phone', profile.phone)
         profile.img = validated_data.get('img', profile.img)
+        if 'profile_type' in validated_data:
+            profile.profile_type.set(validated_data['profile_type'])
         profile.save()
 
         return instance
@@ -87,7 +97,8 @@ class UserProfileSerializer(serializers.Serializer):
             "profile": {
                 "id": instance.profile.id,
                 "phone": phone,
-                "img": full_img_url
+                "img": full_img_url,
+                "profile_type": [pt.type for pt in profile.profile_type.all()] if profile else []
             }
         }
 
