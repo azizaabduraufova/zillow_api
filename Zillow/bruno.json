@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "Zillow",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}
