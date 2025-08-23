@@ -3,9 +3,8 @@ from rest_framework import generics
 
 from zillow.models import PropertyType, Property, Profile
 from zillow.serializers import PropertyTypeSerializer,PropertySerializer, UserProfileSerializer
+from rest_framework import generics, filters
 
-
-# Create your views here.
 
 
 class PropertyTypeGet(generics.ListCreateAPIView):
