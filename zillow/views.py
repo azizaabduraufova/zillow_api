@@ -27,7 +27,9 @@ class PropertyGet(generics.ListCreateAPIView):
     queryset = Property.objects.all()
     serializer_class = PropertySerializer
     filter_backends = [filters.SearchFilter]
-    search_fields = ['name']
+    search_fields = ['title']
+    ordering_fields=['created_at','price']
+    ordering=['-created_at']
 
 
 
