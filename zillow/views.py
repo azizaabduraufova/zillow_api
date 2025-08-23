@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from rest_framework import generics
+from rest_framework import generics, filters
 
 from zillow.models import PropertyType, Property, Profile
 from zillow.serializers import PropertyTypeSerializer,PropertySerializer, UserProfileSerializer
@@ -12,9 +12,10 @@ class PropertyTypeGet(generics.ListCreateAPIView):
     queryset = PropertyType.objects.all()
     serializer_class = PropertyTypeSerializer
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
-    search_fields = ['title', 'location']
-    ordering_fields = ['price', 'created_at']
-    ordering = ['-created_at']
+    search_fields = ['name']
+
+
+
 
 
 class PropertyTypeDetail(generics.RetrieveUpdateDestroyAPIView):
