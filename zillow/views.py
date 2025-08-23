@@ -15,8 +15,6 @@ class PropertyTypeGet(generics.ListCreateAPIView):
 
 
 
-
-
 class PropertyTypeDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = PropertyType.objects.all()
     serializer_class = PropertyTypeSerializer
@@ -27,8 +25,9 @@ class PropertyGet(generics.ListCreateAPIView):
     queryset = Property.objects.all()
     serializer_class = PropertySerializer
     filter_backends = [filters.SearchFilter]
-    search_fields = ['name']
-
+    search_fields = ['title']
+    ordering_fields = ['price', 'created_at']
+    ordering = ['-created_at']
 
 class PropertyDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Property.objects.all()
