@@ -30,6 +30,9 @@ class PropertyGet(generics.ListCreateAPIView):
     search_fields = ['name']
 
 
+
+
+
 class PropertyDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Property.objects.all()
     serializer_class = PropertySerializer
