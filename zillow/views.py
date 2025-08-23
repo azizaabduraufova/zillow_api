@@ -30,6 +30,9 @@ class PropertyGet(generics.ListCreateAPIView):
     ordering_fields = ['price', 'created_at']
     ordering = ['-created_at']
 
+
+
+
 class PropertyDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Property.objects.all()
     serializer_class = PropertySerializer
