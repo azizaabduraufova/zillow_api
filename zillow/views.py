@@ -11,6 +11,10 @@ from zillow.serializers import PropertyTypeSerializer,PropertySerializer, UserPr
 class PropertyTypeGet(generics.ListCreateAPIView):
     queryset = PropertyType.objects.all()
     serializer_class = PropertyTypeSerializer
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    search_fields = ['title', 'location']
+    ordering_fields = ['price', 'created_at']
+    ordering = ['-created_at']
 
 
 class PropertyTypeDetail(generics.RetrieveUpdateDestroyAPIView):
@@ -18,9 +22,12 @@ class PropertyTypeDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = PropertyTypeSerializer
 
 
+
 class PropertyGet(generics.ListCreateAPIView):
     queryset = Property.objects.all()
     serializer_class = PropertySerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['name']
 
 
 class PropertyDetail(generics.RetrieveUpdateDestroyAPIView):
@@ -30,6 +37,8 @@ class PropertyDetail(generics.RetrieveUpdateDestroyAPIView):
 class UserProfileGet(generics.ListCreateAPIView):
     queryset = Profile.objects.all()
     serializer_class = UserProfileSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['user__username']
 
 class UserProfileDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Profile.objects.all()
