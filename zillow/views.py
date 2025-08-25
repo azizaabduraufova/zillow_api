@@ -1,8 +1,11 @@
 from django.shortcuts import render
 from rest_framework import generics, filters
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
-from zillow.models import PropertyType, Property, Profile
-from zillow.serializers import PropertyTypeSerializer,PropertySerializer, UserProfileSerializer
+from zillow.models import PropertyType, Property, Profile, WatchedHistory
+from zillow.serializers import PropertyTypeSerializer, PropertySerializer, UserProfileSerializer, \
+    WatchedHistorySerializer
 from rest_framework import generics, filters
 
 
@@ -48,3 +51,11 @@ class UserProfileGet(generics.ListCreateAPIView):
 class UserProfileDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Profile.objects.all()
     serializer_class = UserProfileSerializer
+
+
+
+class WatchedHistoryView(APIView):
+    def get(selfself,request):
+        histories=WatchedHistory.objects.all()
+        serializer=WatchedHistorySerializer(histories,many=True)
+        return Response(serializer.data)
