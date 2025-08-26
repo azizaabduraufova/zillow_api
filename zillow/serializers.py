@@ -1,8 +1,7 @@
-from zillow.models import Property, PropertyType, Profile, ProfileType
+from zillow.models import Property, PropertyType, Profile, ProfileType, WatchedHistory
 from rest_framework import serializers
 from django.contrib.auth.models import User
 from django.db import transaction
-
 
 
 class PropertySerializer(serializers.ModelSerializer):
@@ -11,11 +10,14 @@ class PropertySerializer(serializers.ModelSerializer):
         fields = '__all__'
         read_only_fields = ['created_at']
 
+
 class PropertyTypeSerializer(serializers.ModelSerializer):
     properties = PropertySerializer(many=True, read_only=True)
+
     class Meta:
         model = PropertyType
         fields = '__all__'
+
 
 class UserProfileSerializer(serializers.Serializer):
     username = serializers.CharField(max_length=30, required=True)
@@ -102,8 +104,18 @@ class UserProfileSerializer(serializers.Serializer):
             }
         }
 
+
 class UserProfileTypeSerializer(serializers.ModelSerializer):
     profiles = UserProfileSerializer(many=True, read_only=True)
+
     class Meta:
         model = ProfileType
         fields = '__all__'
+
+
+class WatchedHistorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = WatchedHistory
+        fields = '__all__'
+        read_only_fields=('id','watched_at')
+

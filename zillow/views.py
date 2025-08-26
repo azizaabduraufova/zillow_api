@@ -1,10 +1,16 @@
 from django.shortcuts import render
 from rest_framework import generics, filters
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
-from zillow.models import PropertyType, Property, Profile
+from zillow.models import PropertyType, Property, Profile, WatchedHistory
 from zillow.permissions import IsOwnerOrReadOnly, IsSellerOrReadOnly
-from zillow.serializers import PropertyTypeSerializer, PropertySerializer, UserProfileSerializer
-from rest_framework import generics, filters
+from zillow.serializers import (
+    PropertyTypeSerializer,
+    PropertySerializer,
+    UserProfileSerializer,
+    WatchedHistorySerializer,
+)
 
 
 class PropertyTypeGet(generics.ListCreateAPIView):
@@ -52,3 +58,10 @@ class UserProfileDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Profile.objects.all()
     serializer_class = UserProfileSerializer
     permission_classes = [IsOwnerOrReadOnly]
+
+
+class WatchedHistoryView(APIView):
+    def get(self, request):
+        histories = WatchedHistory.objects.all()
+        serializer = WatchedHistorySerializer(histories, many=True)
+        return Response(serializer.data)
