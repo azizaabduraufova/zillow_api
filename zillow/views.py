@@ -69,6 +69,7 @@ class UserProfileDetail(generics.RetrieveUpdateDestroyAPIView):
 #         serializer.save()
 #         return Response(serializer.data,status=HTTP_201_CREATED)
 
+
 class WatchedHistoryView(APIView):
     def get(self,  request):
         histories=WatchedHistory.objects.filter(is_deleted=False)
