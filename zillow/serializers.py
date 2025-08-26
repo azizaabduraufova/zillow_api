@@ -1,3 +1,5 @@
+
+
 from zillow.models import Property, PropertyType, Profile, ProfileType, WatchedHistory
 from rest_framework import serializers
 from django.contrib.auth.models import User
@@ -28,7 +30,6 @@ class UserProfileSerializer(serializers.Serializer):
     password_confirm = serializers.CharField(write_only=True)
     phone = serializers.CharField(max_length=15, required=True)
     img = serializers.ImageField(allow_empty_file=True, allow_null=True, required=False)
-
     profile_type = serializers.SlugRelatedField(
         queryset=ProfileType.objects.all(),
         slug_field='type',
@@ -56,7 +57,7 @@ class UserProfileSerializer(serializers.Serializer):
             user = User.objects.create(**validated_data)
             user.set_password(password)
             user.save()
-            Profile.objects.create(user=user, phone=phone, img=img)
+            profile=Profile.objects.create(user=user, phone=phone, img=img)
             profile.profile_type.set(profile_type)
         return user
 
@@ -114,8 +115,18 @@ class UserProfileTypeSerializer(serializers.ModelSerializer):
 
 
 class WatchedHistorySerializer(serializers.ModelSerializer):
+    username=serializers.SerializerMethodField()
+    property_title=serializers.StringRelatedField(source="property")
     class Meta:
         model = WatchedHistory
-        fields = '__all__'
+        fields =( 'id', 'watched_at', 'username', 'user', 'property', 'is_deleted', 'property_title')
         read_only_fields=('id','watched_at')
-
+        extra_kwargs={
+            "user":{"write_only":True},
+            "property_title":{"write_only":True},
+        }
+    def get_username(self,obj):
+        username=obj.user.username
+        # if obj.user.first_name or obj.user.last_name:
+        #     fullname=obj.user.fullname()
+        return username
