@@ -56,7 +56,7 @@ class UserProfileSerializer(serializers.Serializer):
             user = User.objects.create(**validated_data)
             user.set_password(password)
             user.save()
-            Profile.objects.create(user=user, phone=phone, img=img)
+            profile = Profile.objects.create(user=user, phone=phone, img=img)
             profile.profile_type.set(profile_type)
         return user
 
