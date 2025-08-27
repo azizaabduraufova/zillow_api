@@ -1,0 +1,30 @@
+meta {
+  name: User get
+  type: http
+  seq: 7
+}
+
+post {
+  url: {{url}}users/
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "username": "Ali",
+    "first_name": "Ali",
+    "last_name": "Alimov",
+    "email": "ali@gmail.com",
+      "phone": "977777777",
+      "profile_type": [
+        "Seller"
+      ],
+    "password": "1",
+    "password_confirm":"1"
+  }
+}
+
+settings {
+  encodeUrl: true
+}
