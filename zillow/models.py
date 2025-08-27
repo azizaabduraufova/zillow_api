@@ -28,6 +28,7 @@ class Property(models.Model):
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
+
 class ProfileType(models.Model):
     type = models.CharField(max_length=100, unique=True)
 
