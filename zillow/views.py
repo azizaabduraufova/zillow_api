@@ -1,3 +1,5 @@
+from typing import reveal_type
+
 from django.core.serializers import serialize
 from django.db.models import Count, Q
 from django.shortcuts import render
@@ -13,7 +15,7 @@ from zillow.serializers import (
     PropertyTypeSerializer,
     PropertySerializer,
     UserProfileSerializer,
-    WatchedHistorySerializer,
+    WatchedHistorySerializer, PropertyStatisticsSerializer,
 )
 
 
@@ -95,12 +97,9 @@ class WatchedHistoryDestroy(generics.RetrieveUpdateDestroyAPIView):
     queryset = WatchedHistory.objects.filter(is_deleted=True)
     serializer_class = WatchedHistorySerializer
 
-#
-# class UserStatisticsView(APIView):
-#     films=User.objects.annotate(watched_films_count=Count('watched_history')).order_by('-watched_hi')
-#     serializer=UserStatisticsSerializer(films,many=True)
-#     return Response({
-#         "watched_films_count": films["watched_films_count"],
-#         "history_clear": films["history_clear"],
-#         "histories": serializer.data,}
-#     )
+
+class PropertyStatisticsView(APIView):
+    def get (self,request):
+        property=Property.objects.annotate(watched_properties_count=Count('watched_history'))
+        serializer=PropertyStatisticsSerializer(property,many=True)
+        return Response(serializer.data)
