@@ -130,3 +130,8 @@ class WatchedHistorySerializer(serializers.ModelSerializer):
         # if obj.user.first_name or obj.user.last_name:
         #     fullname=obj.user.fullname()
         return username
+
+class PropertyStatisticsSerializer(serializers.Serializer):
+    id=serializers.IntegerField(read_only=True)
+    title=serializers.CharField(read_only=True)
+    watched_properties_count=serializers.IntegerField(read_only=True)

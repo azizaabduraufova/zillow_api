@@ -8,6 +8,7 @@ urlpatterns = [
     path('users/', views.UserProfileGet.as_view()),
     path('detail_users/<int:pk>/', views.UserProfileDetail.as_view()),
     path('history/',views.WatchedHistoryView().as_view()),
-    path('history/<int:pk>/',views.WatchedHistoryDestroy.as_view())
+    path('history/<int:pk>/',views.WatchedHistoryDestroy.as_view()),
+    path('user_statistics/',views.PropertyStatisticsView.as_view()),
 
 ]
