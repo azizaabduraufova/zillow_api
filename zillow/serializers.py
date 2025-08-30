@@ -1,8 +1,9 @@
-from zillow.models import Property, PropertyType, Profile, ProfileType
+
+
+from zillow.models import Property, PropertyType, Profile, ProfileType, WatchedHistory
 from rest_framework import serializers
 from django.contrib.auth.models import User
 from django.db import transaction
-
 
 
 class PropertySerializer(serializers.ModelSerializer):
@@ -11,11 +12,14 @@ class PropertySerializer(serializers.ModelSerializer):
         fields = '__all__'
         read_only_fields = ['created_at']
 
+
 class PropertyTypeSerializer(serializers.ModelSerializer):
     properties = PropertySerializer(many=True, read_only=True)
+
     class Meta:
         model = PropertyType
         fields = '__all__'
+
 
 class UserProfileSerializer(serializers.Serializer):
     username = serializers.CharField(max_length=30, required=True)
@@ -26,7 +30,6 @@ class UserProfileSerializer(serializers.Serializer):
     password_confirm = serializers.CharField(write_only=True)
     phone = serializers.CharField(max_length=15, required=True)
     img = serializers.ImageField(allow_empty_file=True, allow_null=True, required=False)
-
     profile_type = serializers.SlugRelatedField(
         queryset=ProfileType.objects.all(),
         slug_field='type',
@@ -102,8 +105,10 @@ class UserProfileSerializer(serializers.Serializer):
             }
         }
 
+
 class UserProfileTypeSerializer(serializers.ModelSerializer):
     profiles = UserProfileSerializer(many=True, read_only=True)
+
     class Meta:
         model = ProfileType
         fields = '__all__'
@@ -122,3 +127,25 @@ class LoginUserSerializer(serializers.Serializer):
             attrs['token'] = str(token.key)
             return attrs
         raise serializers.ValidationError({"message": "Invalid login/password!"})
+
+class WatchedHistorySerializer(serializers.ModelSerializer):
+    username=serializers.SerializerMethodField()
+    property_title=serializers.StringRelatedField(source="property")
+    class Meta:
+        model = WatchedHistory
+        fields =( 'id', 'watched_at', 'username', 'user', 'property', 'is_deleted', 'property_title')
+        read_only_fields=('id','watched_at')
+        extra_kwargs={
+            "user":{"write_only":True},
+            "property_title":{"write_only":True},
+        }
+    def get_username(self,obj):
+        username=obj.user.username
+        # if obj.user.first_name or obj.user.last_name:
+        #     fullname=obj.user.fullname()
+        return username
+
+class PropertyStatisticsSerializer(serializers.Serializer):
+    id=serializers.IntegerField(read_only=True)
+    title=serializers.CharField(read_only=True)
+    watched_properties_count=serializers.IntegerField(read_only=True)

@@ -10,5 +10,8 @@ urlpatterns = [
     path('register/', views.RegisterUserProfile.as_view()),
     path('login/', views.LoginUserProfile.as_view()),
     path('logout/', views.LogoutUserProfile.as_view()),
+    path('history/',views.WatchedHistoryView().as_view()),
+    path('history/<int:pk>/',views.WatchedHistoryDestroy.as_view()),
+    path('user_statistics/',views.PropertyStatisticsView.as_view()),
 
 ]
