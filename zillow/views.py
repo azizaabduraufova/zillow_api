@@ -1,8 +1,14 @@
 from django.shortcuts import render
 from rest_framework import generics, filters
+from django.contrib.auth import authenticate, logout
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.authtoken.models import Token
 
 from zillow.models import PropertyType, Property, Profile
-from zillow.serializers import PropertyTypeSerializer,PropertySerializer, UserProfileSerializer
+from zillow.serializers import PropertyTypeSerializer,PropertySerializer, UserProfileSerializer, LoginUserSerializer
 from rest_framework import generics, filters
 
 
@@ -48,3 +54,33 @@ class UserProfileGet(generics.ListCreateAPIView):
 class UserProfileDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Profile.objects.all()
     serializer_class = UserProfileSerializer
+
+class RegisterUserProfile(APIView):
+
+    def post(self, request):
+        serializer = UserProfileSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.save()
+        token = Token.objects.create(user=user)
+
+        return Response({
+            "message": "User successfully created",
+            "user": serializer.data,
+            "token": str(token.key)
+        }, status=status.HTTP_201_CREATED)
+
+
+class LoginUserAPIView(APIView):
+    def post(self, request):
+        serializer = LoginUserSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        return Response(serializer.data)
+
+
+class LogoutUserAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        request.user.auth_token.delete()
+        logout(request)
+        return Response({"message": "User logged out!"})
