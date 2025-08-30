@@ -113,6 +113,20 @@ class UserProfileTypeSerializer(serializers.ModelSerializer):
         model = ProfileType
         fields = '__all__'
 
+class LoginUserSerializer(serializers.Serializer):
+    username = serializers.CharField()
+    password = serializers.CharField(write_only=True)
+    token = serializers.CharField(read_only=True)
+
+    def validate(self, attrs):
+        username = attrs['username']
+        password = attrs['password']
+        user = authenticate(username=username, password=password)
+        if user and user.is_active:
+            token, created = Token.objects.get_or_create(user=user)
+            attrs['token'] = str(token.key)
+            return attrs
+        raise serializers.ValidationError({"message": "Invalid login/password!"})
 
 class WatchedHistorySerializer(serializers.ModelSerializer):
     username=serializers.SerializerMethodField()
