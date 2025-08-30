@@ -7,6 +7,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authtoken.models import Token
+from rest_framework.permissions import AllowAny
 
 from zillow.models import PropertyType, Property, Profile
 from zillow.serializers import PropertyTypeSerializer,PropertySerializer, UserProfileSerializer, LoginUserSerializer
@@ -77,6 +78,7 @@ class UserProfileDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = UserProfileSerializer
 
 class RegisterUserProfile(APIView):
+    permission_classes = [AllowAny]
 
     def post(self, request):
         serializer = UserProfileSerializer(data=request.data)
