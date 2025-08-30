@@ -1,0 +1,25 @@
+meta {
+  name: login
+  type: http
+  seq: 15
+}
+
+post {
+  url: http://127.0.0.1:8000/register/
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "username": "admin1",
+    "password": "123",
+    "password_confirm": "123",
+    "phone": 12345678,
+    "profile_type": ["Buyer"]
+  }
+}
+
+settings {
+  encodeUrl: true
+}
